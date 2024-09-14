@@ -37,7 +37,7 @@ const CreateRecipe = () => {
   const onSubmit = async(e) => { 
     e.preventDefault();
     try{
-      await axios.post('http://localhost:3001/recipe',recipe, {headers:{authorization: cookies.access_token}});
+      await axios.post('https://recipe-backend-six.vercel.app/recipe',recipe, {headers:{authorization: cookies.access_token}});
       console.log(recipe);
       alert('Recipe Created Successfully');
       navigate('/');

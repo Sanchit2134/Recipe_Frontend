@@ -22,7 +22,7 @@ const Login = () => {
       e.preventDefault();
       // console.log(username,password)
       try{
-        const response = await axios.post('http://localhost:3001/auth/login',{
+        const response = await axios.post('https://recipe-backend-six.vercel.app/auth/login',{
           username,
           password
         });
@@ -52,7 +52,7 @@ const Register = () => {
     const onSubmit = async (e) => {
         e.preventDefault();
         try{
-          await axios.post('http://localhost:3001/auth/register',{
+          await axios.post('https://recipe-backend-six.vercel.app/auth/register',{
             username,
             password
           });

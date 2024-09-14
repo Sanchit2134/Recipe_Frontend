@@ -9,7 +9,7 @@ const SavedRecipe = () => {
   useEffect(() => {
     const fetchSavedRecipes = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/recipes/savedRecipes/${userId}`);
+        const response = await axios.get(`https://recipe-backend-six.vercel.app/recipes/savedRecipes/${userId}`);
         setSavedRecipes(response.data.savedRecipes);
         // console.log(response.data.savedRecipes);
         console.log(response);

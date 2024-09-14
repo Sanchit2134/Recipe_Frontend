@@ -13,7 +13,7 @@ const Home = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/recipe/all_recipies_of_a_user/${userId}`);
+        const response = await axios.get(`https://recipe-backend-six.vercel.app/recipe/all_recipies_of_a_user/${userId}`);
         if (Array.isArray(response.data)) {
           setRecipes(response.data);
           console.log('Fetched Recipes:', response.data);
@@ -30,7 +30,7 @@ const Home = () => {
 
     const fetchSavedRecipes = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/recipes/savedRecipes/id/${userId}`);
+        const response = await axios.get(`https://recipe-backend-six.vercel.app/recipes/savedRecipes/id/${userId}`);
         if (Array.isArray(response.data.savedRecipes)) {
           setSavedRecipes(response.data.savedRecipes);
           console.log('Fetched Saved Recipes:', response.data.savedRecipes);
@@ -52,7 +52,7 @@ const Home = () => {
   const saveRecipe = async (recipeId) => {
     try {
       console.log('Saving Recipe:', recipeId, userId);
-      const response = await axios.put('http://localhost:3001/recipe', { recipeId, userId }, { headers: { authorization: cookies.access_token } });
+      const response = await axios.put('https://recipe-backend-six.vercel.app/recipe', { recipeId, userId }, { headers: { authorization: cookies.access_token } });
       if (Array.isArray(response.data.savedRecipes)) {
         setSavedRecipes(response.data.savedRecipes);
       } else {
