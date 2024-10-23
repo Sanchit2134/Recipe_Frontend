@@ -5,21 +5,21 @@ import useGetUserId from '../Hooks/useGetUserId';
 
 const SavedRecipe = () => {
   const [savedrecipes, setSavedRecipes] = useState([]);
-  const userId = useGetUserId();
+  const userID = useGetUserId();
   useEffect(() => {
     const fetchSavedRecipes = async () => {
       try {
-        const response = await axios.get(`https://recipe-backend-six.vercel.app/recipes/savedRecipes/${userId}`);
+        const response = await axios.get(`https://recipe-backend-six.vercel.app/recipes/savedRecipes/${userID}`);
         setSavedRecipes(response.data.savedRecipes);
         // console.log(response.data.savedRecipes);
-        console.log(response);
+        // console.log(response);
       }
       catch (err) {
-        console.error(err,"gfghhgfgg");
+        console.error(err);
       }
     }; 
     fetchSavedRecipes();
-  },[]);
+  },[userID]);
  
   return (
     <div>

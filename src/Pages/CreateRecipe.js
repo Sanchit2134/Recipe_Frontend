@@ -2,92 +2,93 @@ import { useState } from 'react';
 import axios from 'axios';
 import useGetUserId from '../Hooks/useGetUserId';
 import { useNavigate } from 'react-router-dom';
-import {useCookies} from 'react-cookie';
+import { useCookies } from 'react-cookie';
 
 const CreateRecipe = () => {
-  const userId = useGetUserId();
-  const [cookies,_] = useCookies(['access_token']);
-  const [recipe,setRecipe] = useState({
+  const userID = useGetUserId();
+  console.log('userID: ',typeof userID);
+  const [cookies, _] = useCookies(['access_token']);
+  const [recipe, setRecipe] = useState({
     name: '',
     ingredients: [],
     instruction: '',
     imageUrl: '',
     cookingTime: 0,
-    userOwner: userId
+    userOwner: userID
   });
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const {name,value} = e.target;
+    const { name, value } = e.target;
     setRecipe({
-      ...recipe,[name]: value
+      ...recipe, [name]: value
     })
   }
   const addIngredient = (e) => {
-    setRecipe({...recipe, ingredients: [...recipe.ingredients,'']})
+    setRecipe({ ...recipe, ingredients: [...recipe.ingredients, ''] })
   }
-  const handleIngredientChange = (e,idx) => {
-    const {value} = e.target;
+  const handleIngredientChange = (e, idx) => {
+    const { value } = e.target;
     const ingredients = recipe.ingredients;
     ingredients[idx] = value;
-    setRecipe({...recipe,ingredients});
-    console.log(recipe);
+    setRecipe({ ...recipe, ingredients });
+    // console.log(recipe);
   };
-  const onSubmit = async(e) => { 
+  const onSubmit = async (e) => {
     e.preventDefault();
-    try{
-      await axios.post('https://recipe-backend-six.vercel.app/recipe',recipe, {headers:{authorization: cookies.access_token}});
-      console.log(recipe);
+    try {
+      await axios.post('http://localhost:3001/recipe', recipe, { headers: { authorization: cookies.access_token } });
+      // console.log(recipe);
       alert('Recipe Created Successfully');
       navigate('/');
     }
-    catch(err){
+    catch (err) {
       console.error(err)
     }
-   };
+  };
 
   return (
     <div>
       <h1>Create Recipe</h1>
-      <form  className='form-CR' onSubmit={onSubmit}>
+      <form className='form-CR' onSubmit={onSubmit}>
         <label htmlFor='name'>Name</label>
-        <input 
-          type='text' 
-          id='name' 
+        <input
+          type='text'
+          id='name'
           name='name'
-          onChange={handleChange}/>
+          onChange={handleChange} />
         <label htmlFor='ingredients'>Ingredients</label>
-        {recipe.ingredients.map((ingredients,idx)=>{
-          return( <input 
+        {recipe.ingredients.map((ingredient, idx) => {
+          return <input
             key={idx}
             type='text'
             name='ingredients'
-            value={ingredients}
+            value={ingredient}
             onChange={(e)=>handleIngredientChange(e,idx)}
-            />)
+          />
         })}
         <button onClick={addIngredient} type='button'>Add Ingrident</button>
         <label htmlFor='instruction'>Instruction</label>
-        <textarea 
-          id='instruction' 
+        <textarea
+          id='instruction'
           name='instruction'
           onChange={handleChange}
-          >
+        >
         </textarea>
         <label htmlFor='imageUrl'>Image</label>
-        <input 
-        type='text' 
-        id='imageUrl' 
-        name='imageUrl'
-        onChange={handleChange}
+        <input
+          type='text'
+          id='imageUrl'
+          name='imageUrl'
+          onChange={handleChange}
         />
         <label htmlFor='cookingTime'>Cooking Time</label>
-        <input 
-        type='number' 
-        id='cookingTime' 
-        name='cookingTime'
-        onChange={handleChange}
+        <input
+          type='number'
+          id='cookingTime'
+          name='cookingTime'
+          onChange={handleChange}
         />
         <button type='submit'>Create Recipe</button>
       </form>
@@ -96,3 +97,5 @@ const CreateRecipe = () => {
 }
 
 export default CreateRecipe
+
+

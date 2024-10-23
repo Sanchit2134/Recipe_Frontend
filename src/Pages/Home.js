@@ -7,16 +7,17 @@ const Home = () => {
   const [recipes, setRecipes] = useState([]);
   const [savedRecipes, setSavedRecipes] = useState([]);
   const [cookies] = useCookies(['access_token']);
-  const userId = useGetUserId();
-  console.log('User ID:', userId);
+  const userID = useGetUserId();
 
   useEffect(() => {
     const fetchRecipes = async () => {
+      console.log('User ID:', userID);
       try {
-        const response = await axios.get(`https://recipe-backend-six.vercel.app/recipe/all_recipies_of_a_user/${userId}`);
+        const response = await axios.get(`https://recipe-backend-six.vercel.app/recipe//all_recipies_of_a_user//${userID}`);
         if (Array.isArray(response.data)) {
           setRecipes(response.data);
-          console.log('Fetched Recipes:', response.data);
+          console.log('response.data: ', response.data);
+          // console.log('Fetched Recipes:', response.data);
           response.data.forEach(recipe => {
             console.log('Recipe Image URLs:', recipe.imageUrls);
           });
@@ -30,10 +31,10 @@ const Home = () => {
 
     const fetchSavedRecipes = async () => {
       try {
-        const response = await axios.get(`https://recipe-backend-six.vercel.app/recipes/savedRecipes/id/${userId}`);
+        const response = await axios.get(`https://recipe-backend-six.vercel.app/recipe/savedRecipes/${userID}`);
         if (Array.isArray(response.data.savedRecipes)) {
           setSavedRecipes(response.data.savedRecipes);
-          console.log('Fetched Saved Recipes:', response.data.savedRecipes);
+          // console.log('Fetched Saved Recipes:', response.data.savedRecipes);
           response.data.savedRecipes.forEach(recipe => {
             console.log('Saved Recipe Image URLs:', recipe.imageUrls);
           });
@@ -45,20 +46,20 @@ const Home = () => {
       }
     };
 
-    if (userId) fetchRecipes();
-    if (cookies.access_token && userId) fetchSavedRecipes();
-  }, [userId, cookies.access_token]);
+    if (userID) fetchRecipes();
+    if (cookies.access_token && userID) fetchSavedRecipes();
+  });
 
-  const saveRecipe = async (recipeId) => {
+  const saveRecipe = async (recipeId,userID) => {
     try {
-      console.log('Saving Recipe:', recipeId, userId);
-      const response = await axios.put('https://recipe-backend-six.vercel.app/recipe', { recipeId, userId }, { headers: { authorization: cookies.access_token } });
+      //console.log('Saving Recipe:', recipeId, userID);
+      const response = await axios.put('https://recipe-backend-six.vercel.app/recipe', { recipeId, userID }, { headers: { authorization: cookies.access_token } });
       if (Array.isArray(response.data.savedRecipes)) {
         setSavedRecipes(response.data.savedRecipes);
       } else {
         console.error('Expected an array for updated saved recipes:', response.data.savedRecipes);
       }
-      console.log('Saved Recipe Response:', response);
+      //console.log('Saved Recipe Response:', response);
     } catch (err) {
       console.error('Error saving recipe:', err);
     }
