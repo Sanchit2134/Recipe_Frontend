@@ -1,47 +1,49 @@
 import axios from 'axios';
-import React from 'react'
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import useGetUserId from '../Hooks/useGetUserId';
 
 const SavedRecipe = () => {
-  const [savedrecipes, setSavedRecipes] = useState([]);
+  const [savedRecipes, setSavedRecipes] = useState([]);
   const userID = useGetUserId();
+
   useEffect(() => {
-    const fetchSavedRecipes = async () => {
-      try {
-        const response = await axios.get(`https://recipe-backend-six.vercel.app/recipes/savedRecipes/${userID}`);
-        setSavedRecipes(response.data.savedRecipes);
-        // console.log(response.data.savedRecipes);
-        // console.log(response);
-      }
-      catch (err) {
-        console.error(err);
-      }
-    }; 
-    fetchSavedRecipes();
-  },[userID]);
- 
+    if (userID) { // Ensure userID exists before making the request
+      const fetchSavedRecipes = async () => {
+        try {
+          const response = await axios.get(`http://localhost:3001/recipes/savedRecipes/${userID}`);
+          setSavedRecipes(response.data.savedRecipes);
+        } catch (err) {
+          console.error('Error fetching saved recipes: ', err);
+          alert('Failed to fetch saved recipes. Please try again later.');
+        }
+      };
+      fetchSavedRecipes();
+    }
+  }, [userID]); // Only fetch recipes when userID changes or is available
+
   return (
     <div>
-      <h1>Saved Recipe</h1>
+      <h1>Saved Recipes</h1>
       <ul>
-        {savedrecipes.map((recipe) => {
-          return <li key={recipe._id}>
-            <div>
-              <h2>{recipe.name}</h2>
-            </div>
-            <div>
-              <p>{recipe.instructions}</p>
-            </div>
-            <img src={recipe.imageUrl} alt={recipe.name} />
-            <p>Cooking Time: {recipe.cookingTime} (mintues)</p>
-          </li>
-        })}
+        {savedRecipes.length > 0 ? (
+          savedRecipes.map((recipe) => (
+            <li key={recipe._id}>
+              <div>
+                <h2>{recipe.name}</h2>
+              </div>
+              <div>
+                <p>{recipe.instructions}</p>
+              </div>
+              <img src={recipe.imageUrl} alt={recipe.name} />
+              <p>Cooking Time: {recipe.cookingTime} minutes</p>
+            </li>
+          ))
+        ) : (
+          <p>No saved recipes found.</p>
+        )}
       </ul>
     </div>
-  )
-}
+  );
+};
 
 export default SavedRecipe;
-
-
