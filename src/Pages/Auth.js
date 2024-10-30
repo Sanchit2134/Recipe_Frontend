@@ -36,7 +36,6 @@ const Login = () => {
         alert('Invalid Credentials');
       }
     } catch (err) {
-      // Handle errors like wrong credentials or server issues
       if (err.response && err.response.status === 400) {
         alert('Invalid Credentials');
       } else {

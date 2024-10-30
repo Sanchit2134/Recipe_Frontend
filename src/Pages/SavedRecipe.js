@@ -1,49 +1,49 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import useGetUserId from '../Hooks/useGetUserId';
+import { useCookies } from 'react-cookie';
 
-const SavedRecipe = () => {
-  const [savedRecipes, setSavedRecipes] = useState([]);
+const SavedRecipes = () => {
   const userID = useGetUserId();
+  const [savedRecipes, setSavedRecipes] = useState([]);
 
-  useEffect(() => {
-    if (userID) { // Ensure userID exists before making the request
-      const fetchSavedRecipes = async () => {
-        try {
-          const response = await axios.get(`http://localhost:3001/recipes/savedRecipes/${userID}`);
-          setSavedRecipes(response.data.savedRecipes);
-        } catch (err) {
-          console.error('Error fetching saved recipes: ', err);
-          alert('Failed to fetch saved recipes. Please try again later.');
-        }
-      };
-      fetchSavedRecipes();
-    }
-  }, [userID]); // Only fetch recipes when userID changes or is available
+  useEffect(()=>{
+      const fetchSavedRecipe = async ()=>{
+      try{
+        const response = await axios.get(`http://localhost:3001/recipe/savedRecipes/${userID}`,{userID});
+        setSavedRecipes(response.data.savedRecipes);
+      }catch(err){
+        console.error(err);
+      }
+    };
+    fetchSavedRecipe()
+  },[])
 
-  return (
+
+  return(
     <div>
-      <h1>Saved Recipes</h1>
-      <ul>
-        {savedRecipes.length > 0 ? (
-          savedRecipes.map((recipe) => (
-            <li key={recipe._id}>
-              <div>
-                <h2>{recipe.name}</h2>
-              </div>
-              <div>
-                <p>{recipe.instructions}</p>
-              </div>
-              <img src={recipe.imageUrl} alt={recipe.name} />
-              <p>Cooking Time: {recipe.cookingTime} minutes</p>
-            </li>
-          ))
-        ) : (
-          <p>No saved recipes found.</p>
-        )}
-      </ul>
-    </div>
-  );
+    <h1>Saved Recipes</h1>
+    <ul>
+      {savedRecipes.map((recipe) => (
+        <li key={recipe._id}>
+          { savedRecipes.includes(recipe._id) && <h1>Already Saved</h1>}
+          <div>
+            <h2>{recipe.name}</h2>
+          </div>
+          <div className='instruction'>   
+            <p>{recipe.instruction}</p>
+          </div>
+          <div>
+           <img src={recipe.imageUrl} alt={recipe.name} />
+          </div>
+          <p>Cooking Time: {recipe.cookingTime} minutes</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+  )
 };
 
-export default SavedRecipe;
+export default SavedRecipes;
+
+

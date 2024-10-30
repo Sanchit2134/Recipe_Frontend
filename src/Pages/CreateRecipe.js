@@ -6,13 +6,12 @@ import { useCookies } from 'react-cookie';
 
 const CreateRecipe = () => {
   const userID = useGetUserId();
-  console.log('userID: ',typeof userID);
   const [cookies, _] = useCookies(['access_token']);
   const [recipe, setRecipe] = useState({
     name: '',
     ingredients: [],
     instruction: '',
-    imageUrl: '',
+    imageUrls: '',
     cookingTime: 0,
     userOwner: userID
   });
@@ -37,9 +36,9 @@ const CreateRecipe = () => {
   };
   const onSubmit = async (e) => {
     e.preventDefault();
+    console.log(recipe);
     try {
-      await axios.post('http://localhost:3001/recipe', recipe, { headers: { authorization: cookies.access_token } });
-      // console.log(recipe);
+      await axios.post('http://localhost:3001/recipe', recipe, {headers:{'Authorization': cookies.access_token}});
       alert('Recipe Created Successfully');
       navigate('/');
     }
@@ -59,15 +58,15 @@ const CreateRecipe = () => {
           name='name'
           onChange={handleChange} />
         <label htmlFor='ingredients'>Ingredients</label>
-        {recipe.ingredients.map((ingredient, idx) => {
-          return <input
-            key={idx}
-            type='text'
-            name='ingredients'
-            value={ingredient}
-            onChange={(e)=>handleIngredientChange(e,idx)}
-          />
-        })}
+        {recipe.ingredients.map((ingredient, idx) => (
+          <input
+          key={idx}
+          type='text'
+          name='ingredients'
+          value={ingredient}
+          onChange={(e)=>handleIngredientChange(e,idx)}
+        />)
+        )}
         <button onClick={addIngredient} type='button'>Add Ingrident</button>
         <label htmlFor='instruction'>Instruction</label>
         <textarea
@@ -76,11 +75,11 @@ const CreateRecipe = () => {
           onChange={handleChange}
         >
         </textarea>
-        <label htmlFor='imageUrl'>Image</label>
+        <label htmlFor='imageUrls'>Image</label>
         <input
           type='text'
-          id='imageUrl'
-          name='imageUrl'
+          id='imageUrls'
+          name='imageUrls'
           onChange={handleChange}
         />
         <label htmlFor='cookingTime'>Cooking Time</label>
@@ -97,5 +96,7 @@ const CreateRecipe = () => {
 }
 
 export default CreateRecipe
+
+
 
 
